@@ -17,40 +17,75 @@ World::World()
 	Room* forest = new Room("Forest", "You are surrounded by tall trees. It feels like a huge forest someone could get lost easily.");
 	Room* house = new Room("House", "You are inside a beautiful but small white house.");
 	Room* basement = new Room("Basement", "The basement features old furniture and dim light.");
+	Room* mountain = new Room("Mountain", "You are at the foot of the mountain and heard a great growl.");
+	Room* topMuontain = new Room("Top Mountain", "After climbing the mountain they reach the top, where there is a beautiful view.");
+	Room* cave = new Room("Cave", "You see a cave where someone seems to live, surrounded by books and scrolls.");
 
-	Exit* ex1 = new Exit("west", "east", "Little path", house, forest);
-	Exit* ex2 = new Exit("down", "up", "Stairs", house, basement);
-	ex2->locked = true;
+
+	Exit* exHouseForest = new Exit("west", "east", "Little path", house, forest);
+	Exit* exHouseBasement = new Exit("down", "up", "Stairs", house, basement);
+	Exit* exHouseCave = new Exit("up", "down", "Winding path", house, cave);
+	Exit* exForestMountain = new Exit("west", "east", "Stony path", forest, mountain);
+	Exit* exMountainTop = new Exit("up", "down", "Mountain trail", mountain, topMuontain);
+	Exit* exTopCave = new Exit("east", "west", "Mountain trail", topMuontain, cave);
+	exHouseBasement->locked = true;
 
 	entities.push_back(forest);
 	entities.push_back(house);
 	entities.push_back(basement);
+	entities.push_back(mountain);
 
-	entities.push_back(ex1);
-	entities.push_back(ex2);
+	entities.push_back(exHouseForest);
+	entities.push_back(exHouseBasement);
+	entities.push_back(exHouseCave);
+	entities.push_back(exForestMountain);
+	entities.push_back(exMountainTop);
+	entities.push_back(exTopCave);
 
 	// Creatures ----
-	Creature* butler = new Creature("Butler", "It's James, the house Butler.", house);
-	butler->hit_points = 10;
+	Creature* tortoise = new Creature("Tortoise", "Big tortoise with a huge shell.", house);
+	tortoise->hit_points = 6;
 
-	entities.push_back(butler);
+	Creature* cyclops = new Creature("Cyclops", "Monster whit only one eye. Looks angry", mountain);
+	cyclops->hit_points = 15;
+
+	Creature* troll = new Creature("Troll", "The final boos.", basement);
+	troll->hit_points = 50;
+
+	entities.push_back(tortoise);
+	entities.push_back(cyclops);
+	entities.push_back(troll);
 
 	// Items -----
 	Item* mailbox = new Item("Mailbox", "Looks like it might contain something.", house);
 	Item* key = new Item("Key", "Old iron key.", mailbox);
-	ex2->key = key;
+	exHouseBasement->key = key;
 
 	Item* sword = new Item("Sword", "A simple old and rusty sword.", forest, WEAPON);
 	sword->min_value = 2;
 	sword->max_value = 6;
 
-	Item* sword2(sword);
-	sword2->parent = butler;
+	Item* legendarySword = new Item("LegendarySword", "A Legendary sword, looks very powerfull. Has a hole where you could place something...", topMuontain, WEAPON);
+	legendarySword->min_value = 5;
+	legendarySword->max_value = 10;
 
-	Item* shield = new Item("Shield", "An old wooden shield.", butler, ARMOUR);
+	Item* helmet = new Item("Helmet", "Big Helmet", cyclops, ARMOUR);
+	helmet->min_value = 4;
+	helmet->max_value = 6;
+
+	Item* mace = new Item("Mace", "Wooden mace", cyclops, WEAPON);
+	mace->min_value = 1;
+	mace->max_value = 9;
+	cyclops->AutoEquip();
+
+
+	Item* sword2(sword);
+	sword2->parent = tortoise;
+
+	Item* shield = new Item("Shield", "An old wooden shield.", tortoise, ARMOUR);
 	shield->min_value = 1;
 	shield->max_value = 3;
-	butler->AutoEquip();
+	tortoise->AutoEquip();
 
 	entities.push_back(mailbox);
 	entities.push_back(sword);
