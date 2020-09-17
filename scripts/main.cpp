@@ -45,8 +45,10 @@ int main()
 			}
 			else if(key != '\r') // return
 			{
-				player_input += key;
-				cout << key;
+				if (key != '\0') {
+					player_input += key;
+					cout << key;
+				}				
 			}
 			else
 				Tokenize(player_input, args);
