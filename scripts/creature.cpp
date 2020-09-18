@@ -349,7 +349,14 @@ int Creature::ReceiveAttack(int damage)
 void Creature::Die()
 {
 	if(PlayerInRoom())
+	{
 		cout << name << " dies.\n";
+		if (type == PLAYER) {
+			cout << "\n---GAME OVER----";
+			cout << "\n Restat or Quit\n";
+		}
+		cout << ">";
+	}
 }
 
 // ----------------------------------------------------

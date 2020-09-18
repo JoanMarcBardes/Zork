@@ -74,8 +74,8 @@ World::World()
 	helmet->max_value = 6;
 
 	Item* mace = new Item("Mace", "Wooden mace", cyclops, WEAPON);
-	mace->min_value = 1;
-	mace->max_value = 9;
+	mace->min_value = 26;
+	mace->max_value = 27;
 	cyclops->AutoEquip();
 
 
@@ -137,6 +137,12 @@ void World::GameLoop()
 bool World::ParseCommand(vector<string>& args)
 {
 	bool ret = true;
+
+	if (!player->IsAlive())
+	{
+		cout << "\nHero is death so whe can't do nothing...\n";
+		return true;
+	}
 
 	switch(args.size())
 	{

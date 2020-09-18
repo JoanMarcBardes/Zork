@@ -54,8 +54,18 @@ int main()
 				Tokenize(player_input, args);
 		}
 
-		if(args.size() > 0 && Same(args[0], "quit"))
+		if (args.size() > 0 && Same(args[0], "quit"))
+		{
+			cout << "\nThanks for playing, Bye!\n";
 			break;
+		}
+
+		if (args.size() > 0 && Same(args[0], "restart"))
+		{
+			cout << "\nRestarting the game...\n\n";
+			main();
+			break;
+		}			
 
 		if(my_world.Tick(args) == false)
 			cout << "\nSorry, I do not understand your command.\n";
@@ -67,7 +77,6 @@ int main()
 			cout << "> ";
 		}
 	}
-
-	cout << "\nThanks for playing, Bye!\n";
+		
 	return 0;
 }
