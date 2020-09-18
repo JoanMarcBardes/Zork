@@ -7,6 +7,7 @@ Entity::Entity(const char* name, const char* description, Entity* parent = NULL)
 name(name), description(description), parent(parent)
 {
 	type = ENTITY;
+	blocked_parent = false;
 
 	if(parent != NULL)
 		parent->container.push_back(this);
@@ -86,4 +87,10 @@ void Entity::FindAll(EntityType type, list<Entity*>& list_to_fill) const
 		if((*it)->type == type)
 			list_to_fill.push_back(*it);
 	}
+}
+
+// ----------------------------------------------------
+void Entity::BlockParent(bool active) 
+{
+	blocked_parent = active;
 }

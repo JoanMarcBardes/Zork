@@ -93,6 +93,12 @@ bool Player::Take(const vector<string>& args)
 			return false;
 		}
 
+		if (subitem->blocked_parent)
+		{
+			cout << "\n" << subitem->name << " cannot be removed from " << item->name << ".\n";
+			return false;
+		}
+
 		cout << "\nYou take " << subitem->name << " from " << item->name << ".\n";
 		subitem->ChangeParentTo(this);
 	}
@@ -170,8 +176,13 @@ bool Player::Drop(const vector<string>& args)
 
 		if(container == NULL)
 		{
-			container = (Item*)Find(args[3], ITEM);
-			cout << "\nCan not find '" << args[3] << "' in your inventory or in the room.\n";
+			cout << "\nCan not find '" << args[3] << "' in the room.\n";
+			return false;
+		}
+
+		if(!container->CanContainItem(item->item_type))
+		{
+			cout << "\nThe item '" << args[3] << "' cannot contain '" << args[1] << "'\n";
 			return false;
 		}
 
@@ -394,4 +405,49 @@ bool Player::UnLock(const vector<string>& args)
 	exit->locked = false;
 
 	return true;
+}
+
+// ----------------------------------------------------
+bool Player::Forge(const vector<string>& args)
+{
+	if (args.size() == 4)
+	{
+		Item* weapon = (Item*)Find(args[1], ITEM);
+
+		if (weapon == NULL)
+		{
+			cout << "\nCan not find '" << args[1] << "' in your inventory.\n";
+			return false;
+		}
+
+		if (weapon->item_type != WEAPON)
+		{
+			cout << "\nThis item '" << args[1] << "' cannot be forged\n";
+			return false;
+		}
+
+		Item* metal = (Item*)Find(args[3], ITEM);
+
+		if (metal == NULL)
+		{
+			cout << "\nCan not find '" << args[3] << "' in your inventory.\n";
+			return false;
+		}
+
+		if (!weapon->CanContainItem(metal->item_type))
+		{
+			cout << "\nThe item '" << args[1] << "' cannot be forged with '" << args[3] << "'\n";
+			return false;
+		}
+
+		cout << "\nYou forge " << weapon->name << " with " << metal->name << ".\n";
+		cout << "\nNow " << weapon->name << " looks more powerful.\n";
+		metal->ChangeParentTo(weapon);
+		metal->BlockParent(true);
+		weapon->AddValue(5);
+
+		return true;
+	}
+
+	return false;
 }

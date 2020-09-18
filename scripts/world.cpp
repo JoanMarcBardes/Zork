@@ -57,7 +57,7 @@ World::World()
 	entities.push_back(troll);
 
 	// Items -----
-	Item* mailbox = new Item("Mailbox", "Looks like it might contain something.", house);
+	Item* mailbox = new Item("Mailbox", "Looks like it might contain something.", house, COMMON, COMMON);
 	Item* key = new Item("Key", "Old iron key.", mailbox);
 	exHouseBasement->key = key;
 
@@ -65,7 +65,7 @@ World::World()
 	sword->min_value = 2;
 	sword->max_value = 6;
 
-	Item* legendarySword = new Item("LegendarySword", "A Legendary sword, looks very powerfull. Has a hole where you could place something...", topMuontain, WEAPON);
+	Item* legendarySword = new Item("LegendarySword", "A Legendary sword, looks very powerfull. Has a hole where you could place something...", topMuontain, WEAPON, MAGIC);
 	legendarySword->min_value = 5;
 	legendarySword->max_value = 10;
 
@@ -87,9 +87,16 @@ World::World()
 	shield->max_value = 3;
 	tortoise->AutoEquip();
 
+	Item* armor_stand = new Item("ArmorStand", "Place where you can save your armors", house, COMMON, ARMOUR);
+	Item* sword_stand = new Item("SwordStand", "Place where you can save your wapons", house, COMMON, WEAPON);
+
+	Item* magic_Stone = new Item("MagicStone", "Magic stone that radiates power", forest, MAGIC);
+
 	entities.push_back(mailbox);
 	entities.push_back(sword);
 	entities.push_back(shield);
+	entities.push_back(armor_stand);
+	entities.push_back(sword_stand);
 
 	// Player ----
 	player = new Player("Hero", "You are an awesome adventurer!", forest);
@@ -257,6 +264,10 @@ bool World::ParseCommand(vector<string>& args)
 			else if(Same(args[0], "drop") || Same(args[0], "put"))
 			{
 				player->Drop(args);
+			}
+			else if (Same(args[0], "forge") || Same(args[0], "fg"))
+			{
+				player->Forge(args);
 			}
 			else
 				ret = false;
