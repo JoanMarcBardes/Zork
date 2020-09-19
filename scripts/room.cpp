@@ -55,6 +55,18 @@ void Room::Look() const
 		}
 	}
 
+	// List npc --
+	for (list<Entity*>::const_iterator it = container.begin(); it != container.cend(); ++it)
+	{
+		if ((*it)->type == NPC)
+		{
+			Creature* cr = (Creature*)*it;
+			cout << "\nThere is someone else here: " << cr->name;
+			if (cr->IsAlive() == false)
+				cout << " (dead)";
+		}
+	}
+
 	cout << "\n";
 }
 

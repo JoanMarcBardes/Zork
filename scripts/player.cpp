@@ -3,6 +3,7 @@
 #include "room.h"
 #include "exit.h"
 #include "item.h"
+#include "npc.h"
 #include "player.h"
 
 // ----------------------------------------------------
@@ -10,6 +11,7 @@ Player::Player(const char* title, const char* description, Room* room) :
 Creature(title, description, room)
 {
 	type = PLAYER;
+	knowForge = false;
 }
 
 // ----------------------------------------------------
@@ -109,6 +111,12 @@ bool Player::Take(const vector<string>& args)
 		if(item == NULL)
 		{
 			cout << "\nThere is no item here with that name.\n";
+			return false;
+		}
+
+		if (item->blocked_parent)
+		{
+			cout << "\nCan't take " << item->name << " is immovable.\n";
 			return false;
 		}
 
@@ -216,6 +224,10 @@ bool Player::Equip(const vector<string>& args)
 		armour = item;
 		break;
 
+		case LIGHT:
+		light = item;
+		break;
+
 		default:
 		cout << "\n" << item->name << " cannot be equipped.\n";
 		return false;
@@ -244,6 +256,8 @@ bool Player::UnEquip(const vector<string>& args)
 		weapon = NULL;
 	else if(item == armour)
 		armour = NULL;
+	else if (item == light)
+		light = NULL;
 	else
 	{
 		cout << "\n" << item->name << " is not equipped.\n";
@@ -408,10 +422,37 @@ bool Player::UnLock(const vector<string>& args)
 }
 
 // ----------------------------------------------------
+bool Player::Talk(const vector<string>& args)
+{
+	Npc *target = (Npc*)parent->Find(args[1], NPC);
+
+	if (target == NULL)
+	{
+		cout << "\nCan't talk with" << args[1] << ".";
+		return false;
+	}
+
+	if (!target->IsAlive())
+	{
+		cout << "\nCan't talk with" << args[1] << " is death.";
+		return false;
+	}
+
+	target->Dialogue(INTRO);
+	return true;
+}
+
+// ----------------------------------------------------
 bool Player::Forge(const vector<string>& args)
 {
 	if (args.size() == 4)
 	{
+		if (!knowForge)
+		{
+			cout << "\n You don't know how to forge" << endl;
+			return false;
+		}
+
 		Item* weapon = (Item*)Find(args[1], ITEM);
 
 		if (weapon == NULL)
@@ -443,7 +484,7 @@ bool Player::Forge(const vector<string>& args)
 		cout << "\nYou forge " << weapon->name << " with " << metal->name << ".\n";
 		cout << "\nNow " << weapon->name << " looks more powerful.\n";
 		metal->ChangeParentTo(weapon);
-		metal->BlockParent(true);
+		metal->blocked_parent = true;
 		weapon->AddValue(5);
 
 		return true;

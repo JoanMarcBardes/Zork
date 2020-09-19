@@ -23,10 +23,11 @@ public:
 	bool Loot(const vector<string>& args);
 	bool Lock(const vector<string>& args);
 	bool UnLock(const vector<string>& args);
+	bool Talk(const vector<string>& args);
 	bool Forge(const vector<string>& args);
 
 public :
-
+	bool knowForge;
 };
 
 #endif //__Player__

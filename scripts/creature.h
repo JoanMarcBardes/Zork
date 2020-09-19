@@ -48,6 +48,7 @@ public :
 	Creature* combat_target;
 	Item* weapon;
 	Item* armour;
+	Item* light;
 };
 
 #endif //__Creature__

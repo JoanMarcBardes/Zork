@@ -88,9 +88,3 @@ void Entity::FindAll(EntityType type, list<Entity*>& list_to_fill) const
 			list_to_fill.push_back(*it);
 	}
 }
-
-// ----------------------------------------------------
-void Entity::BlockParent(bool active) 
-{
-	blocked_parent = active;
-}

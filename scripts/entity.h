@@ -13,7 +13,8 @@ enum EntityType
 	EXIT,
 	ITEM,
 	CREATURE,
-	PLAYER
+	PLAYER,
+	NPC
 };
 
 class Entity
@@ -30,7 +31,6 @@ public:
 	Entity* Find(EntityType type) const;
 	Entity* Find(const string& name, EntityType type) const;
 	void	FindAll(EntityType type, list<Entity*>& list_to_fill) const;
-	void    BlockParent(bool active);
 
 public :
 	EntityType type;

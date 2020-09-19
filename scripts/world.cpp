@@ -6,6 +6,7 @@
 #include "exit.h"
 #include "room.h"
 #include "player.h"
+#include "npc.h"
 #include "world.h"
 
 // ----------------------------------------------------
@@ -14,7 +15,7 @@ World::World()
 	tick_timer = clock();
 
 	// Rooms ----
-	Room* forest = new Room("Forest", "You are surrounded by tall trees. It feels like a huge forest someone could get lost easily.");
+	Room* forest = new Room("Forest", "You are surrounded by tall trees. It feels like a huge forest were someone could get lost easily.");
 	Room* house = new Room("House", "You are inside a beautiful but small white house.");
 	Room* basement = new Room("Basement", "The basement features old furniture and dim light.");
 	Room* mountain = new Room("Mountain", "You are at the foot of the mountain and heard a great growl.");
@@ -43,7 +44,7 @@ World::World()
 	entities.push_back(exTopCave);
 
 	// Creatures ----
-	Creature* tortoise = new Creature("Tortoise", "Big tortoise with a huge shell.", house);
+	Creature* tortoise = new Creature("Tortoise", "Big tortoise with a huge shell.", forest);
 	tortoise->hit_points = 6;
 
 	Creature* cyclops = new Creature("Cyclops", "Monster whit only one eye. Looks angry", mountain);
@@ -57,46 +58,71 @@ World::World()
 	entities.push_back(troll);
 
 	// Items -----
+	Item* dagger = new Item("Dagger", "A simple old and rusty dagge.", forest, WEAPON);
+	dagger->min_value = 2;
+	dagger->max_value = 6;
+
 	Item* mailbox = new Item("Mailbox", "Looks like it might contain something.", house, COMMON, COMMON);
+	Item* armor_stand = new Item("ArmorStand", "Place where you can save your armors", house, COMMON, ARMOUR);
+	Item* sword_stand = new Item("SwordStand", "Place where you can save your wapons", house, COMMON, WEAPON);
+	Item* nightstand = new Item("Nightstand", "Ideal for storing a lantern", house, COMMON, LIGHT);
 	Item* key = new Item("Key", "Old iron key.", mailbox);
-	exHouseBasement->key = key;
-
-	Item* sword = new Item("Sword", "A simple old and rusty sword.", forest, WEAPON);
-	sword->min_value = 2;
-	sword->max_value = 6;
-
-	Item* legendarySword = new Item("LegendarySword", "A Legendary sword, looks very powerfull. Has a hole where you could place something...", topMuontain, WEAPON, MAGIC);
-	legendarySword->min_value = 5;
-	legendarySword->max_value = 10;
+	Item* lantern = new Item("Lantern", "With this you can see in the dark", nightstand, LIGHT);
+	mailbox->blocked_parent = true;
+	armor_stand->blocked_parent = true;
+	sword_stand->blocked_parent = true;
+	nightstand->blocked_parent = true;
+	exHouseBasement->key = key;		
 
 	Item* helmet = new Item("Helmet", "Big Helmet", cyclops, ARMOUR);
 	helmet->min_value = 4;
 	helmet->max_value = 6;
 
 	Item* mace = new Item("Mace", "Wooden mace", cyclops, WEAPON);
-	mace->min_value = 26;
-	mace->max_value = 27;
+	mace->min_value = 1;
+	mace->max_value = 7;
 	cyclops->AutoEquip();
 
-
-	Item* sword2(sword);
-	sword2->parent = tortoise;
+	Item* dagge2(dagger);
+	dagge2->parent = tortoise;
 
 	Item* shield = new Item("Shield", "An old wooden shield.", tortoise, ARMOUR);
 	shield->min_value = 1;
 	shield->max_value = 3;
-	tortoise->AutoEquip();
+	tortoise->AutoEquip();	
 
-	Item* armor_stand = new Item("ArmorStand", "Place where you can save your armors", house, COMMON, ARMOUR);
-	Item* sword_stand = new Item("SwordStand", "Place where you can save your wapons", house, COMMON, WEAPON);
+	Item* goldChest = new Item("GoldChest", "Big chest made with gold. Need a key for open.", topMuontain, COMMON,COMMON);
+	Item* sword = new Item("Sword", "A Legendary sword, looks very powerfull. Has a hole where you could place something...", goldChest, WEAPON, IRON);
+	sword->min_value = 5;
+	sword->max_value = 10;
 
-	Item* magic_Stone = new Item("MagicStone", "Magic stone that radiates power", forest, MAGIC);
+	Item* magic_Stone = new Item("MagicStone", "Magic stone that radiates power", cyclops, IRON);
 
+	Item* goldKey = new Item("GoldKey", "Old golden key.", cave);
+	Item* potion = new Item("Potion", "Can restore all your life.", cave);
+	Item* moneybag = new Item("Moneybag", "Bag with money.", cave);
+	goldKey->blocked_parent = true;
+	potion->blocked_parent = true;
+	moneybag->blocked_parent = true;
+
+
+	entities.push_back(dagger);
 	entities.push_back(mailbox);
-	entities.push_back(sword);
-	entities.push_back(shield);
 	entities.push_back(armor_stand);
 	entities.push_back(sword_stand);
+	entities.push_back(shield);
+	entities.push_back(goldChest);
+	entities.push_back(sword);
+	entities.push_back(magic_Stone);
+	entities.push_back(goldKey);
+	entities.push_back(potion);
+	entities.push_back(moneybag);
+
+
+	// NPC ----
+	Npc* npc = new Npc("Erudite", "Old man with a huge white beard", cave);
+	npc->hit_points = 1;
+	entities.push_back(npc);
 
 	// Player ----
 	player = new Player("Hero", "You are an awesome adventurer!", forest);
@@ -239,12 +265,17 @@ bool World::ParseCommand(vector<string>& args)
 			{
 				player->Loot(args);
 			}
+			else if (Same(args[0], "talk") || Same(args[0], "tk"))
+			{
+				player->Talk(args);
+			}
 			else
 				ret = false;
 			break;
 		}
 		case 3: // commands with two arguments ------------------------------
 		{
+			ret = false;
 			break;
 		}
 		case 4: // commands with three arguments ------------------------------

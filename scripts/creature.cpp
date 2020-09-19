@@ -389,5 +389,7 @@ void Creature::Stats() const
 	cout << ((weapon) ? weapon->min_value : min_damage) << "-" << ((weapon) ? weapon->max_value : max_damage);
 	cout << "\nProtection: (" << ((armour) ? armour->name : "no armour") << ") ";
 	cout << ((armour) ? armour->min_value : min_protection) << "-" << ((armour) ? armour->max_value : max_protection);
+	if (light)
+		cout << "\nYou are wearing a Lantern";
 	cout << "\n";
 }

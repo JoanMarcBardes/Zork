@@ -13,7 +13,8 @@ enum ItemType
 	COMMON,
 	WEAPON,
 	ARMOUR,
-	MAGIC,
+	IRON,
+	LIGHT,
 	NONE
 };
 
