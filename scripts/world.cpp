@@ -28,7 +28,7 @@ World::World()
 	Exit* exHouseCave = new Exit("up", "down", "Winding path", house, cave);
 	Exit* exForestMountain = new Exit("west", "east", "Stony path", forest, mountain);
 	Exit* exMountainTop = new Exit("up", "down", "Mountain trail", mountain, topMuontain);
-	Exit* exTopCave = new Exit("east", "west", "Mountain trail", topMuontain, cave);
+	Exit* exTopCave = new Exit("east", "west", "Mountain trail", topMuontain, cave, true);
 	exHouseBasement->locked = true;
 
 	entities.push_back(forest);
@@ -82,28 +82,28 @@ World::World()
 	mace->min_value = 1;
 	mace->max_value = 7;
 	cyclops->AutoEquip();
-
-	Item* dagge2(dagger);
-	dagge2->parent = tortoise;
-
+	
 	Item* shield = new Item("Shield", "An old wooden shield.", tortoise, ARMOUR);
 	shield->min_value = 1;
 	shield->max_value = 3;
 	tortoise->AutoEquip();	
 
-	Item* goldChest = new Item("GoldChest", "Big chest made with gold. Need a key for open.", topMuontain, COMMON,COMMON);
+	Item* goldChest = new Item("GoldChest", "Big chest made with gold. Need a key for open.", topMuontain, COMMON,COMMON);	
 	Item* sword = new Item("Sword", "A Legendary sword, looks very powerfull. Has a hole where you could place something...", goldChest, WEAPON, IRON);
 	sword->min_value = 5;
 	sword->max_value = 10;
 
-	Item* magic_Stone = new Item("MagicStone", "Magic stone that radiates power", cyclops, IRON);
+	Item* magic_iron = new Item("MagicIron", "Magic stone that radiates power", cyclops, IRON);
 
 	Item* goldKey = new Item("GoldKey", "Old golden key.", cave);
 	Item* potion = new Item("Potion", "Can restore all your life.", cave);
 	Item* moneybag = new Item("Moneybag", "Bag with money.", cave);
-	goldKey->blocked_parent = true;
+	goldKey->blocked_parent = true;	
 	potion->blocked_parent = true;
 	moneybag->blocked_parent = true;
+
+	goldChest->locked = true;
+	goldChest->key = goldKey;
 
 
 	entities.push_back(dagger);
@@ -113,7 +113,7 @@ World::World()
 	entities.push_back(shield);
 	entities.push_back(goldChest);
 	entities.push_back(sword);
-	entities.push_back(magic_Stone);
+	entities.push_back(magic_iron);
 	entities.push_back(goldKey);
 	entities.push_back(potion);
 	entities.push_back(moneybag);

@@ -34,6 +34,8 @@ public :
 	int max_value;
 	ItemType item_type;
 	ItemType container_of;
+	bool locked;
+	Item* key;
 };
 
 #endif //__Item__

@@ -33,11 +33,22 @@ void Player::Look(const vector<string>& args) const
 			}
 		}
 
-		if(Same(args[1], "me"))
+		for (list<Entity*>::const_iterator it = container.begin(); it != container.cend(); ++it)
+		{
+			if (Same((*it)->name, args[1]))
+			{
+				(*it)->Look();
+				return;
+			}
+		}
+
+		if (Same(args[1], "me"))
 		{
 			cout << "\n" << name << "\n";
 			cout << description << "\n";
 		}
+		else
+			cout << "\n" << args[1] << " doesn't exist." <<endl;
 	}
 	else
 	{
@@ -84,6 +95,12 @@ bool Player::Take(const vector<string>& args)
 		if(item == NULL)
 		{
 			cout << "\nCannot find '" << args[3] << "' in this room or in your inventory.\n";
+			return false;
+		}
+
+		if (item->locked)
+		{
+			cout << "\n'" << args[3] << "' is locked.\n";
 			return false;
 		}
 
@@ -176,7 +193,7 @@ bool Player::Drop(const vector<string>& args)
 
 		if(item == NULL)
 		{
-			cout << "\nCan not find '" << args[1] << "' in your inventory.\n";
+			cout << "\nCan not find item '" << args[1] << "' in your inventory.\n";
 			return false;
 		}
 
@@ -184,7 +201,7 @@ bool Player::Drop(const vector<string>& args)
 
 		if(container == NULL)
 		{
-			cout << "\nCan not find '" << args[3] << "' in the room.\n";
+			cout << "\nCan not find item '" << args[3] << "' in the room.\n";
 			return false;
 		}
 
@@ -387,36 +404,67 @@ bool Player::UnLock(const vector<string>& args)
 		return false;
 
 	Exit* exit = GetRoom()->GetExit(args[1]);
+	Item* chest = (Item*)parent->Find(args[1], ITEM);
 
-	if(exit == NULL)
+	if(exit == NULL && chest == NULL)
 	{
-		cout << "\nThere is no exit at '" << args[1] << "'.\n";
+		cout << "\nDoes not exist '" << args[1] << "'.\n";
 		return false;
 	}
 
-	if(exit->locked == false)
+	if (exit != NULL)
 	{
-		cout << "\nThat exit is not locked.\n";
-		return false;
+		if (exit->locked == false)
+		{
+			cout << "\nThat exit is not locked.\n";
+			return false;
+		}
+
+		Item* item = (Item*)Find(args[3], ITEM);
+
+		if (item == NULL)
+		{
+			cout << "\nKey '" << args[3] << "' not found in your inventory.\n";
+			return false;
+		}
+
+		if (exit->key != item)
+		{
+			cout << "\nKey '" << item->name << "' is not the key for " << exit->GetNameFrom((Room*)parent) << ".\n";
+			return false;
+		}
+
+		cout << "\nYou unlock " << exit->GetNameFrom((Room*)parent) << "...\n";
+
+		exit->locked = false;
 	}
-
-	Item* item = (Item*)Find(args[3], ITEM);
-
-	if(item == NULL)
+	else
 	{
-		cout << "\nKey '" << args[3] << "' not found in your inventory.\n";
-		return false;
+		if (chest->locked == false)
+		{
+			cout << "\nThat item is not locked.\n";
+			return false;
+		}
+
+		Item* item = (Item*)Find(args[3], ITEM);
+
+		if (item == NULL)
+		{
+			cout << "\nKey '" << args[3] << "' not found in your inventory.\n";
+			return false;
+		}
+
+		if (chest->key != item)
+		{
+			cout << "\nKey '" << item->name << "' is not the key for " << chest->name << ".\n";
+			return false;
+		}
+
+		cout << "\nYou unlock " << chest->name << "...\n";
+
+		chest->locked = false;
 	}
-
-	if(exit->key != item)
-	{
-		cout << "\nKey '" << item->name << "' is not the key for " << exit->GetNameFrom((Room*)parent) << ".\n";
-		return false;
-	}
-
-	cout << "\nYou unlock " << exit->GetNameFrom((Room*)parent) << "...\n";
-
-	exit->locked = false;
+	
 
 	return true;
 }

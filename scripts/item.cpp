@@ -6,7 +6,7 @@
 
 // ----------------------------------------------------
 Item::Item(const char* title, const char* description, Entity* parent, ItemType item_type, ItemType container_of) :
-Entity(title, description, parent), item_type(item_type),container_of(container_of)
+Entity(title, description, parent), item_type(item_type),container_of(container_of), locked(false), key(NULL)
 {
 	type = ITEM;
 	min_value = max_value = 0;
@@ -30,6 +30,12 @@ void Item::Look() const
 		cout << "It contains: " << "\n";
 		for(list<Entity*>::const_iterator it = stuff.begin(); it != stuff.cend(); ++it)
 			cout << (*it)->name << "\n";
+	}
+
+	if (item_type == WEAPON || item_type == ARMOUR)
+	{
+		item_type == WEAPON ? cout << "Attack: " : cout << "Protection: ";
+		cout << min_value << "-" << max_value << endl;
 	}
 }
 
