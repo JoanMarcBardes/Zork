@@ -21,6 +21,7 @@ public:
 	Exit* GetExit(const string& direction) const;
 
 public :
+	string blocker_name;
 };
 
 #endif //__Room__

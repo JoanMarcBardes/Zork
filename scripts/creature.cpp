@@ -12,7 +12,7 @@ Entity(title, description, (Entity*)room)
 	type = CREATURE;
 	hit_points = 1;
 	min_damage = max_damage = min_protection = max_protection = 0;
-	weapon = armour = NULL;
+	weapon = armour = light = NULL;
 	combat_target = NULL;
 }
 
@@ -389,7 +389,7 @@ void Creature::Stats() const
 	cout << ((weapon) ? weapon->min_value : min_damage) << "-" << ((weapon) ? weapon->max_value : max_damage);
 	cout << "\nProtection: (" << ((armour) ? armour->name : "no armour") << ") ";
 	cout << ((armour) ? armour->min_value : min_protection) << "-" << ((armour) ? armour->max_value : max_protection);
-	if (light)
+	if (light != NULL)
 		cout << "\nYou are wearing a Lantern";
 	cout << "\n";
 }

@@ -73,6 +73,15 @@ bool Player::Go(const vector<string>& args)
 		return false;
 	}
 
+	string blocker_name = GetRoom()->blocker_name;
+	Creature* creature = (Creature*)parent->Find(blocker_name, CREATURE);
+
+	if (creature != NULL && creature->IsAlive())
+	{
+		cout << "\nThe creature " << creature->name << " don't let you escape." "\n";
+		return false;
+	}
+
 	cout << "\nYou take direction " << exit->GetNameFrom((Room*) parent) << "...\n";
 	ChangeParentTo(exit->GetDestinationFrom((Room*) parent));
 	parent->Look();

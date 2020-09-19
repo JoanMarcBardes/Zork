@@ -49,6 +49,7 @@ World::World()
 
 	Creature* cyclops = new Creature("Cyclops", "Monster whit only one eye. Looks angry", mountain);
 	cyclops->hit_points = 15;
+	mountain->blocker_name = cyclops->name;
 
 	Creature* troll = new Creature("Troll", "The final boos.", basement);
 	troll->hit_points = 50;
