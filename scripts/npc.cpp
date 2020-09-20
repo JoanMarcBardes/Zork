@@ -8,7 +8,7 @@
 
 // ----------------------------------------------------
 Npc::Npc(const char* title, const char* description, Room* room) :
-	Creature(title, description, room)
+	Creature(title, description, room, false)
 {
 	finish = false;
 	type = NPC;

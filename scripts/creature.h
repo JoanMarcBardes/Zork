@@ -12,7 +12,7 @@ using namespace std;
 class Creature : public Entity
 {
 public:
-	Creature(const char* name, const char* description, Room* room);
+	Creature(const char* name, const char* description, Room* room, bool final_boss = false);
 	~Creature();
 
 	virtual bool Go(const vector<string>& args);
@@ -41,7 +41,6 @@ public:
 public :
 
 	int hit_points;
-	int max_hit_points;
 	int min_damage;
 	int max_damage;
 	int min_protection;
@@ -49,7 +48,7 @@ public :
 	Creature* combat_target;
 	Item* weapon;
 	Item* armour;
-	Item* light;
+	bool final_boss;
 };
 
 #endif //__Creature__

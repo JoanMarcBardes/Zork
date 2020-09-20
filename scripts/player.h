@@ -1,6 +1,7 @@
 #ifndef __Player__
 #define __Player__
 
+#include <time.h>
 #include "creature.h"
 
 using namespace std;
@@ -8,7 +9,7 @@ using namespace std;
 class Player : public Creature
 {
 public:
-	Player(const char* name, const char* description, Room* room);
+	Player(const char* name, const char* description, Room* room, int max_hit_points, clock_t start);
 	~Player();
 
 	bool Go(const vector<string>& args);
@@ -28,9 +29,14 @@ public:
 	bool Drink(const vector<string>& args);
 	void LevelUp();
 	void Tick();
+	void Stats() const;
 
 public :
+	int max_hit_points;
 	bool knowForge;
+	Item* light;
+	bool win;
+	clock_t start;
 };
 
 #endif //__Player__

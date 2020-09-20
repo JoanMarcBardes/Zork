@@ -50,9 +50,15 @@ World::World()
 	Creature* cyclops = new Creature("Cyclops", "Monster whit only one eye. Looks angry", mountain);
 	cyclops->hit_points = 15;
 	mountain->blocker_name = cyclops->name;
+	cyclops->min_damage = 1;
+	cyclops->max_damage = 5;
 
-	Creature* troll = new Creature("Troll", "The final boos.", basement);
-	troll->hit_points = 50;
+	Creature* troll = new Creature("Troll", "The final boos.", basement,true);
+	troll->hit_points = 1;
+	troll->min_damage = 5;
+	troll->max_damage = 8;
+	troll->min_protection = 3;
+	troll->max_protection = 6;
 
 	entities.push_back(tortoise);
 	entities.push_back(cyclops);
@@ -60,13 +66,13 @@ World::World()
 
 	// Items -----
 	Item* dagger = new Item("Dagger", "A simple old and rusty dagge.", forest, WEAPON);
-	dagger->min_value = 2;
-	dagger->max_value = 6;
+	dagger->min_value = 12;
+	dagger->max_value = 16;
 
 	Item* mailbox = new Item("Mailbox", "Looks like it might contain something.", house, COMMON, COMMON);
 	Item* armor_stand = new Item("ArmorStand", "Place where you can save your armors", house, COMMON, ARMOUR);
 	Item* sword_stand = new Item("SwordStand", "Place where you can save your wapons", house, COMMON, WEAPON);
-	Item* nightstand = new Item("Nightstand", "Ideal for storing a lantern", house, COMMON, LIGHT);
+	Item* nightstand = new Item("NightStand", "Ideal for storing a lantern", house, COMMON, LIGHT);
 	Item* key = new Item("Key", "Old iron key.", mailbox);
 	Item* lantern = new Item("Lantern", "With this you can see in the dark", nightstand, LIGHT);
 	mailbox->blocked_parent = true;
@@ -122,12 +128,10 @@ World::World()
 
 	// NPC ----
 	Npc* npc = new Npc("Erudite", "Old man with a huge white beard", cave);
-	npc->hit_points = 1;
 	entities.push_back(npc);
 
 	// Player ----
-	player = new Player("Hero", "You are an awesome adventurer!", forest);
-	player->hit_points = 25;
+	player = new Player("Hero", "You are an awesome adventurer!", forest, 25, tick_timer);
 	entities.push_back(player);
 }
 
@@ -174,7 +178,13 @@ bool World::ParseCommand(vector<string>& args)
 
 	if (!player->IsAlive())
 	{
-		cout << "\nHero is death so whe can't do nothing...\n";
+		cout << "\nHero is dead so whe can't do nothing...\n";
+		return true;
+	}
+
+	if (player->win)
+	{
+		cout << "\nYou already won, can stop playing: 'Quit' or play again: 'Restart'\n";
 		return true;
 	}
 

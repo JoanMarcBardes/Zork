@@ -6,13 +6,13 @@
 #include "creature.h"
 
 // ----------------------------------------------------
-Creature::Creature(const char* title, const char* description, Room* room) :
-Entity(title, description, (Entity*)room)
+Creature::Creature(const char* title, const char* description, Room* room, bool final_boss) :
+Entity(title, description, (Entity*)room), final_boss(final_boss)
 {
 	type = CREATURE;
-	hit_points = max_hit_points = 1;
+	hit_points = 1;
 	min_damage = max_damage = min_protection = max_protection = 0;
-	weapon = armour = light = NULL;
+	weapon = armour = NULL;
 	combat_target = NULL;
 }
 
@@ -101,7 +101,7 @@ void Creature::Inventory() const
 
 	if(items.size() == 0)
 	{
-		cout << name << " does not own any items\n";
+		cout << "\n"<< name << " does not own any items\n";
 		return;
 	}
 
@@ -354,6 +354,7 @@ void Creature::Die()
 	{
 		cout << name << " dies.\n";
 		if (type == PLAYER) {
+			hit_points = 0;
 			cout << "\n---GAME OVER----";
 			cout << "\n Restart or Quit\n";
 		}
@@ -391,7 +392,5 @@ void Creature::Stats() const
 	cout << ((weapon) ? weapon->min_value + min_damage : min_damage) << "-" << ((weapon) ? weapon->max_value + max_damage : max_damage);
 	cout << "\nProtection: (" << ((armour) ? armour->name : "no armour") << ") ";
 	cout << ((armour) ? armour->min_value + min_protection : min_protection) << "-" << ((armour) ? armour->max_value + max_protection : max_protection);
-	if (light != NULL)
-		cout << "\nYou are wearing a Lantern";
 	cout << "\n";
 }

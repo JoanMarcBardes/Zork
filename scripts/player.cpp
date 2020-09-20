@@ -1,4 +1,5 @@
 #include <iostream>
+#include <time.h>
 #include "globals.h"
 #include "room.h"
 #include "exit.h"
@@ -7,11 +8,14 @@
 #include "player.h"
 
 // ----------------------------------------------------
-Player::Player(const char* title, const char* description, Room* room) :
-Creature(title, description, room)
+Player::Player(const char* title, const char* description, Room* room, int max_hit_points, clock_t start) :
+Creature(title, description, room, false), max_hit_points(max_hit_points), start(start)
 {
+	hit_points = max_hit_points;
 	type = PLAYER;
 	knowForge = false;
+	light = NULL;
+	win = false;
 }
 
 // ----------------------------------------------------
@@ -299,6 +303,8 @@ bool Player::UnEquip(const vector<string>& args)
 bool Player::Examine(const vector<string>& args) const
 {
 	Creature *target = (Creature*)parent->Find(args[1], CREATURE);
+	if (target == NULL)
+		target = (Creature*)parent->Find(args[1], NPC);
 
 	if(target == NULL)
 	{
@@ -316,10 +322,24 @@ bool Player::Examine(const vector<string>& args) const
 bool Player::Attack(const vector<string>& args)
 {
 	Creature *target = (Creature*)parent->Find(args[1], CREATURE);
+	if (target == NULL)
+		target = (Creature*)parent->Find(args[1], NPC);
 
 	if(target == NULL)
 	{
 		cout << "\n" << args[1] << " is not here.";
+		return false;
+	}
+
+	if (target->final_boss && light == NULL) {
+		cout << "\nYou almost can see nothing, miss the attack.\n" << target->name << " attack you..." << endl;
+		Die();
+		return false;
+	}
+
+	if (weapon == NULL)
+	{
+		cout << "\nIt's not good idea attack without equip a weapon" << endl;
 		return false;
 	}
 
@@ -491,7 +511,7 @@ bool Player::Talk(const vector<string>& args)
 
 	if (!target->IsAlive())
 	{
-		cout << "\nCan't talk with" << args[1] << " is death.";
+		cout << "\nCan't talk with " << target->name << " is dead." << endl;
 		return false;
 	}
 
@@ -609,8 +629,28 @@ void Player::Tick()
 			combat_target = NULL;
 
 		if (combat_target != NULL && !combat_target->IsAlive()) {
-			LevelUp();
+			if (combat_target->final_boss)
+			{
+				win = true;
+				cout << "\n---YOU WIN----";
+				cout << "\nTime: " << (clock() - start) / CLOCKS_PER_SEC << " seconds." << endl;
+				cout << "\n Restart or Quit\n>";
+			}
+			else
+				LevelUp();
 			combat_target = NULL;
 		} 
 	}
+}
+
+void Player::Stats() const
+{
+	cout << "\nHit Points: " << hit_points;
+	cout << "\nAttack: (" << ((weapon) ? weapon->name : "no weapon") << ") ";
+	cout << ((weapon) ? weapon->min_value + min_damage : min_damage) << "-" << ((weapon) ? weapon->max_value + max_damage : max_damage);
+	cout << "\nProtection: (" << ((armour) ? armour->name : "no armour") << ") ";
+	cout << ((armour) ? armour->min_value + min_protection : min_protection) << "-" << ((armour) ? armour->max_value + max_protection : max_protection);
+	if (light != NULL)
+		cout << "\nYou are wearing a Lantern";
+	cout << "\n";
 }
