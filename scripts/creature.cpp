@@ -10,7 +10,7 @@ Creature::Creature(const char* title, const char* description, Room* room) :
 Entity(title, description, (Entity*)room)
 {
 	type = CREATURE;
-	hit_points = 1;
+	hit_points = max_hit_points = 1;
 	min_damage = max_damage = min_protection = max_protection = 0;
 	weapon = armour = light = NULL;
 	combat_target = NULL;
@@ -297,7 +297,7 @@ bool Creature::Attack(const vector<string>& args)
 {
 	Creature *target = (Creature*)parent->Find(args[1], CREATURE);
 
-	if(target == NULL)
+	if(target == NULL && target->IsAlive())
 		return false;
 
 	combat_target = target;
@@ -314,7 +314,8 @@ int Creature::MakeAttack()
 		return false;
 	}
 
-	int result = (weapon) ? weapon->GetValue() : Roll(min_damage, max_damage);
+	int base_damage = Roll(min_damage, max_damage);
+	int result = (weapon) ? weapon->GetValue() + base_damage: base_damage;
 
 	if(PlayerInRoom())
 		cout << name << " attacks " << combat_target->name << " for " << result << "\n";
@@ -331,7 +332,8 @@ int Creature::MakeAttack()
 // ----------------------------------------------------
 int Creature::ReceiveAttack(int damage)
 {
-	int prot = (armour) ? armour->GetValue() : Roll(min_protection, max_protection);
+	int base_armor = Roll(min_protection, max_protection);
+	int prot = (armour) ? armour->GetValue() + base_armor : base_armor;
 	int received = damage - prot;
 
 	hit_points -= received;
@@ -353,7 +355,7 @@ void Creature::Die()
 		cout << name << " dies.\n";
 		if (type == PLAYER) {
 			cout << "\n---GAME OVER----";
-			cout << "\n Restat or Quit\n";
+			cout << "\n Restart or Quit\n";
 		}
 		cout << ">";
 	}
@@ -386,9 +388,9 @@ void Creature::Stats() const
 {
 	cout << "\nHit Points: " << hit_points;
 	cout << "\nAttack: (" << ((weapon) ? weapon->name : "no weapon") << ") ";
-	cout << ((weapon) ? weapon->min_value : min_damage) << "-" << ((weapon) ? weapon->max_value : max_damage);
+	cout << ((weapon) ? weapon->min_value + min_damage : min_damage) << "-" << ((weapon) ? weapon->max_value + max_damage : max_damage);
 	cout << "\nProtection: (" << ((armour) ? armour->name : "no armour") << ") ";
-	cout << ((armour) ? armour->min_value : min_protection) << "-" << ((armour) ? armour->max_value : max_protection);
+	cout << ((armour) ? armour->min_value + min_protection : min_protection) << "-" << ((armour) ? armour->max_value + max_protection : max_protection);
 	if (light != NULL)
 		cout << "\nYou are wearing a Lantern";
 	cout << "\n";

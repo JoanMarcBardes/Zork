@@ -97,7 +97,7 @@ World::World()
 	Item* magic_iron = new Item("MagicIron", "Magic stone that radiates power", cyclops, IRON);
 
 	Item* goldKey = new Item("GoldKey", "Old golden key.", cave);
-	Item* potion = new Item("Potion", "Can restore all your life.", cave);
+	Item* potion = new Item("Potion", "Can restore all your life.", cave, DRINK);
 	Item* moneybag = new Item("Moneybag", "Bag with money.", cave);
 	goldKey->blocked_parent = true;	
 	potion->blocked_parent = true;
@@ -269,6 +269,10 @@ bool World::ParseCommand(vector<string>& args)
 			else if (Same(args[0], "talk") || Same(args[0], "tk"))
 			{
 				player->Talk(args);
+			}
+			else if (Same(args[0], "drink") || Same(args[0], "dk"))
+			{
+				player->Drink(args);
 			}
 			else
 				ret = false;

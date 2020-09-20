@@ -549,3 +549,68 @@ bool Player::Forge(const vector<string>& args)
 
 	return false;
 }
+
+// ----------------------------------------------------
+bool Player::Drink(const vector<string>& args)
+{
+	Item* item = (Item*)Find(args[1], ITEM);
+	if (item != NULL && item->item_type == DRINK)
+	{
+		hit_points = max_hit_points;
+		cout << "\nYou drink a potion and restore all hit points." << endl;
+		container.remove(item);
+		return true;
+	}
+	
+	cout << "\nYou have't potions in your inventory." << endl;
+
+	return true;
+}
+
+// ----------------------------------------------------
+void Player::LevelUp()
+{
+	cout << "\nLevel up!!";
+	cout << "\nWhat skill do you want to improve:";
+	cout << "\n 1. Life  2. Attack  3. Armor" << endl;
+
+	string arg;
+	cin >> arg;
+
+	if (Same(arg, "Life") || Same(arg, "1"))
+	{
+		hit_points += 5;
+		max_hit_points += 5;
+		cout << "\nHit points increased +5." << endl;
+	}
+	else if (Same(arg, "Attack") || Same(arg, "2"))
+	{
+		min_damage += 1;
+		max_damage += 2;
+		cout << "\nDamage increased +(1-2)." << endl;
+	}
+	else if (Same(arg, "Armor") || Same(arg, "3"))
+	{
+		min_protection += 1;
+		max_protection += 2;
+		cout << "\nArmor increased +(1-2)." << endl;
+	}
+	cout << ">";
+}
+
+// ----------------------------------------------------
+void Player::Tick()
+{
+	if (combat_target != NULL)
+	{
+		if (parent->Find(combat_target) == true)
+			MakeAttack();
+		else
+			combat_target = NULL;
+
+		if (combat_target != NULL && !combat_target->IsAlive()) {
+			LevelUp();
+			combat_target = NULL;
+		} 
+	}
+}

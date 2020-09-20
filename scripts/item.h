@@ -15,6 +15,7 @@ enum ItemType
 	ARMOUR,
 	IRON,
 	LIGHT,
+	DRINK,
 	NONE
 };
 

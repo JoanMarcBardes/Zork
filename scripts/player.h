@@ -25,6 +25,9 @@ public:
 	bool UnLock(const vector<string>& args);
 	bool Talk(const vector<string>& args);
 	bool Forge(const vector<string>& args);
+	bool Drink(const vector<string>& args);
+	void LevelUp();
+	void Tick();
 
 public :
 	bool knowForge;

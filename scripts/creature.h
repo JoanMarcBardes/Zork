@@ -41,6 +41,7 @@ public:
 public :
 
 	int hit_points;
+	int max_hit_points;
 	int min_damage;
 	int max_damage;
 	int min_protection;
