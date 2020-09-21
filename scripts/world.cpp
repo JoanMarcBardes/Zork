@@ -8,11 +8,13 @@
 #include "player.h"
 #include "npc.h"
 #include "world.h"
+#include "Help.h"
 
 // ----------------------------------------------------
 World::World()
 {
 	tick_timer = clock();
+	help = new Help();
 
 	// Rooms ----
 	Room* forest = new Room("Forest", "You are surrounded by tall trees. It feels like a huge forest were someone could get lost easily.");
@@ -192,7 +194,15 @@ bool World::ParseCommand(vector<string>& args)
 	{
 		case 1: // commands with no arguments ------------------------------
 		{
-			if(Same(args[0], "look") || Same(args[0], "l"))
+			if (args.size() > 0 && Same(args[0], "help"))
+			{
+				help->PrintHelp();
+			}
+			else if (args.size() > 0 && Same(args[0], "info"))
+			{
+				help->PrintInfo();
+			}
+			else if(Same(args[0], "look") || Same(args[0], "l"))
 			{
 				player->Look(args);
 			}

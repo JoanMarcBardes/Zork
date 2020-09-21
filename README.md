@@ -24,6 +24,8 @@ Enjoy the game.
 ## Useful commands 📋
 
 commands with no arguments:
+* "info", this command prints how to play.
+* "help", this command prints all the commands that can be done.
 * "quit", this command close the game.
 * "restart", this command restart the game.
 * "look" or "l", this command print which location are they player and what have this location (items,Monsters,NPC...).

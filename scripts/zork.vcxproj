@@ -81,6 +81,7 @@
     <ClCompile Include="entity.cpp" />
     <ClCompile Include="exit.cpp" />
     <ClCompile Include="globals.cpp" />
+    <ClCompile Include="Help.cpp" />
     <ClCompile Include="item.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="player.cpp" />
@@ -93,6 +94,7 @@
     <ClInclude Include="entity.h" />
     <ClInclude Include="exit.h" />
     <ClInclude Include="globals.h" />
+    <ClInclude Include="Help.h" />
     <ClInclude Include="npc.h" />
     <ClInclude Include="item.h" />
     <ClInclude Include="player.h" />

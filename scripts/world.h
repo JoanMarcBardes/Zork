@@ -4,6 +4,7 @@
 #include <string>
 #include <list>
 #include <time.h>
+#include "Help.h"
 
 #define TICK_FREQUENCY 0.5f
 
@@ -28,6 +29,7 @@ private:
 	clock_t tick_timer;
 	list<Entity*> entities;
 	Player* player;
+	Help* help;
 };
 
 #endif //__World__
