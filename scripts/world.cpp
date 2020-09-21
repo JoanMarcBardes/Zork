@@ -50,14 +50,12 @@ World::World()
 	tortoise->hit_points = 6;
 
 	Creature* cyclops = new Creature("Cyclops", "Monster whit only one eye. Looks angry", mountain);
-	cyclops->hit_points = 15;
+	cyclops->hit_points = 12;
 	mountain->blocker_name = cyclops->name;
-	cyclops->min_damage = 1;
-	cyclops->max_damage = 5;
 
 	Creature* troll = new Creature("Troll", "The final boos.", basement,true);
-	troll->hit_points = 1;
-	troll->min_damage = 5;
+	troll->hit_points = 35;
+	troll->min_damage = 4;
 	troll->max_damage = 8;
 	troll->min_protection = 3;
 	troll->max_protection = 6;
@@ -68,8 +66,8 @@ World::World()
 
 	// Items -----
 	Item* dagger = new Item("Dagger", "A simple old and rusty dagge.", forest, WEAPON);
-	dagger->min_value = 12;
-	dagger->max_value = 16;
+	dagger->min_value = 2;
+	dagger->max_value = 6;
 
 	Item* mailbox = new Item("Mailbox", "Looks like it might contain something.", house, COMMON, COMMON);
 	Item* armor_stand = new Item("ArmorStand", "Place where you can save your armors", house, COMMON, ARMOUR);
@@ -84,8 +82,8 @@ World::World()
 	exHouseBasement->key = key;		
 
 	Item* helmet = new Item("Helmet", "Big Helmet", cyclops, ARMOUR);
-	helmet->min_value = 4;
-	helmet->max_value = 6;
+	helmet->min_value = 2;
+	helmet->max_value = 4;
 
 	Item* mace = new Item("Mace", "Wooden mace", cyclops, WEAPON);
 	mace->min_value = 1;

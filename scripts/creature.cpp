@@ -336,6 +336,9 @@ int Creature::ReceiveAttack(int damage)
 	int prot = (armour) ? armour->GetValue() + base_armor : base_armor;
 	int received = damage - prot;
 
+	//Don't heal
+	received = received < 0 ? 0 : received;
+
 	hit_points -= received;
 
 	if(PlayerInRoom())
